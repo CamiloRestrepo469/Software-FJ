@@ -106,10 +106,33 @@ class Cliente(Entidad):
 # LUIS FELIPE GONZALEZ CLAVIJO
 # =====================================================
 
+class Servicio(ABC):
 
+    def __init__(self, nombre, costo_base):
 
+        if costo_base <= 0:
+            raise ServicioInvalidoError(
+                "Costo base inválido"
+            )
 
+        self.nombre = nombre
+        self.costo_base = costo_base
 
+    @abstractmethod
+    def calcular_costo(
+        self,
+        impuesto=0,
+        descuento=0
+    ):
+        pass
+
+    @abstractmethod
+    def describir(self):
+        pass
+
+    @abstractmethod
+    def validar_parametros(self):
+        pass
 # =====================================================
 # BRAYAN DANIEL MENA MEDRANO
 # =====================================================
