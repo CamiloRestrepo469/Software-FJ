@@ -119,7 +119,49 @@ class Cliente(Entidad):
 
 # =====================================================
 # CARLOS HERNAN GALEANO HERRERA
+# CLASE RESERVA
 # =====================================================
+class Reserva:
+
+    def __init__(self, cliente, servicio, duracion):
+        if cliente is None:
+            raise ReservaError("La reserva necesita un cliente válido")
+
+        if servicio is None:
+            raise ReservaError("La reserva necesita un servicio válido")
+
+        self.cliente = cliente
+        self.servicio = servicio
+        self.duracion = duracion
+        self.estado = "Pendiente"
+
+    def confirmar(self):
+        if self.estado == "Cancelada":
+            raise ReservaError("No se puede confirmar una reserva cancelada")
+        self.estado = "Confirmada"
+
+    def cancelar(self):
+        self.estado = "Cancelada"
+
+    def procesar(self):
+# Calcula el costo final de la reserva.
+               
+        try:
+            self.servicio.verificar_disponibilidad()
+            costo = self.servicio.calcular_costo()
+            logging.info(f"Reserva procesada correctamente. Costo: {costo}")
+            return costo
+
+        except ServicioNoDisponibleError as e:
+            logging.error(str(e))
+            raise ReservaError("No se pudo procesar la reserva") from e
+
+        except Exception as e:
+            logging.error(str(e))
+            raise ReservaError("Error inesperado al procesar la reserva") from e
+
+    def mostrar_info(self):
+        return f"{self.cliente.get_nombre()} - {self.servicio.nombre} - {self.estado}"
 
 
 
